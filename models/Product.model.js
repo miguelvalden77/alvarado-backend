@@ -19,13 +19,13 @@ const productSchema = new Schema(
             required: true,
             default: true
         },
-        allergens: {
-            type: String,
-            enum: ["Pescado", "Frutos secos", "Leche", "Huevos", "Cacahuetes", "Soja", "Gluten", "Apio", "Sésamo"]
-        },
         category: {
             type: String,
             enum: ["jam&pa", "que", "vac", "emb", "vin", "car", "bac", "lot"],
+            required: true
+        },
+        image: {
+            type: String,
             required: true
         }
     },
