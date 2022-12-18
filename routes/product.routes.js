@@ -72,7 +72,23 @@ router.post("/:id/update", async (req, res, next)=>{
     }
 
     try{
+        await Product.findByIdAndUpdate(id, {name, description, price, image})
 
+        res.json({succesMessage: "Producto actualizado"})
+    }
+    catch(err){
+        console.log(err)
+    }
+
+})
+
+router.delete("/:id/delete", async (req, res, next)=>{
+
+    const {id} = req.params
+
+    try{
+        await Product.findByIdAndDelete(id)
+        res.json({succesMessage: "Producto borrado"})
     }
     catch(err){
         console.log(err)
