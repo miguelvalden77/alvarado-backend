@@ -22,6 +22,11 @@ const productSchema = new Schema(
         allergens: {
             type: String,
             enum: ["Pescado", "Frutos secos", "Leche", "Huevos", "Cacahuetes", "Soja", "Gluten", "Apio", "Sésamo"]
+        },
+        category: {
+            type: String,
+            enum: ["jam&pa", "que", "vac", "emb", "vin", "car", "bac", "lot"],
+            required: true
         }
     },
     {
