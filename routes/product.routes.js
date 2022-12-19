@@ -24,6 +24,19 @@ router.post("/create", async (req, res, next)=>{
 
 })
 
+router.get("/:id/oneProduct", async (req, res, next)=>{
+    const {id} = req.params
+
+    try{
+        const product = await Product.findById(id)
+        res.json(product)
+    }
+    catch(err){
+        console.log(err)
+    }
+
+})
+
 router.get("/:category", async (req, res, next)=>{
 
     const {category} = req.params
@@ -107,11 +120,13 @@ const calculateOrderAmount = async (items)=>{
 
 router.post("/create-payment-intent", async (req, res) => {
     const { items } = req.body;
-    console.log(items[0].id)
+    
+    const productToBuy = await Product.findById(items[0]._id)
+
   
     // Create a PaymentIntent with the order amount and currency
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 1200,
+      amount: productToBuy.price * 100,
       currency: "eur",
       automatic_payment_methods: {
         enabled: true,
