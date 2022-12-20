@@ -2,11 +2,22 @@ const router = require("express").Router()
 const User = require("../models/User.model")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
+const isAuth = require("../middlewares/isAuth")
 
 
 router.post("/login", async (req, res, next)=>{
 
     const {username, password} = req.body
+
+    // const tkn = async (pass)=>{
+
+    //     const salt = await bcrypt.genSalt(10)
+    //     const hashedPassword = await bcrypt.hash(pass, salt)
+    //     console.log("hash", hashedPassword)
+    // }
+
+    // tkn("1234abcdABCD")
+
     if(!username || !password){
         res.status(400).json({errorMessage: "Deben rellenarse todos los campos"})
         return
@@ -32,6 +43,7 @@ router.post("/login", async (req, res, next)=>{
             username: foundUser.username
         }
 
+
         const authToken = jwt.sign(payload, process.env.SECRET, {algorithm: "HS256", expiresIn: "1h"})
 
         res.json({authToken})
@@ -41,5 +53,14 @@ router.post("/login", async (req, res, next)=>{
     }
 
 }) 
+
+router.get("/verify", isAuth, async (req, res, next)=>{
+    try{
+        res.json(req.payload)
+    }
+    catch(error){
+        next(error)
+    }
+})
 
 module.exports = router
