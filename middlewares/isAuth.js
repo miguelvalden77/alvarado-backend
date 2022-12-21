@@ -2,10 +2,11 @@ const {expressjwt} = require("express-jwt")
 
 const isAuth = expressjwt({
     secret: process.env.SECRET,
-    algorithms: ["HS256", "ES256"],
+    algorithms: ["HS256"],
     requestProperty: "payload",
     getToken: (req)=>{
-        if(req.headers == undefined || req.headers.authorization == undefined){
+        console.log(req.headers,"jjj")
+        if(req.headers === undefined || req.headers.authorization === undefined){
             console.log("No hay token")
             return null
         }
