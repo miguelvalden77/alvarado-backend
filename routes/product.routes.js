@@ -111,22 +111,19 @@ router.delete("/:id/delete", async (req, res, next)=>{
 
 const stripe = require("stripe")('sk_test_51MGUQ8GKc0rrkaCnXzab3LpEQNagPoHznPIXG1KpKVAUzfzRzRzNJmMDAm0fLwVzG7Tw0gc6rTiD16VCaOFPHmI900tSSmqEbZ')
 
-const calculateOrderAmount = async (items)=>{
-    
-    const product = await Product.findById(items[0].id)
-
-    return product.price
-}
 
 router.post("/create-payment-intent", async (req, res) => {
     const { items } = req.body;
-    
-    const productToBuy = await Product.findById(items[0]._id)
 
+    const totalAmount = items.reduce((acc, item)=>{
+
+        return acc + item.price
+
+    }, 0)
   
     // Create a PaymentIntent with the order amount and currency
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: productToBuy.price * 100,
+      amount: totalAmount * 100,
       currency: "eur",
       automatic_payment_methods: {
         enabled: true,

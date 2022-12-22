@@ -5,7 +5,7 @@ const isAuth = expressjwt({
     algorithms: ["HS256"],
     requestProperty: "payload",
     getToken: (req)=>{
-        console.log(req.headers,"jjj")
+
         if(req.headers === undefined || req.headers.authorization === undefined){
             console.log("No hay token")
             return null
