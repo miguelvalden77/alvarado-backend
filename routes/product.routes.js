@@ -117,7 +117,7 @@ router.post("/create-payment-intent", async (req, res) => {
 
     const totalAmount = items.reduce((acc, item)=>{
 
-        return acc + item.price
+        return acc + item.product.price
 
     }, 0)
   
