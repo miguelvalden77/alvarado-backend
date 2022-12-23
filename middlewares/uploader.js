@@ -12,7 +12,7 @@ const storage = new CloudinaryStorage({
     cloudinary,
     params: {
         allow_formats: ["jpg", "png"],
-        folder: "pokemonNews"
+        folder: "alvarado"
     }
 })
 
