@@ -116,9 +116,16 @@ const stripe = require("stripe")('sk_test_51MGUQ8GKc0rrkaCnXzab3LpEQNagPoHznPIXG
 router.post("/create-payment-intent", async (req, res) => {
     const { items } = req.body;
 
-    const totalAmount = items.reduce((acc, item)=>{
+    const products = items.map(async (e) =>{
+        const product = await Product.findById(e.product._id)
+        return {product: product, cantidad: e.cantidad}
+    })
 
-        return acc + item.product.price
+    const results = await Promise.all(products)
+
+    const totalAmount = results.reduce((acc, item)=>{
+
+        return acc + item.product.price * item.cantidad
 
     }, 0)
   
