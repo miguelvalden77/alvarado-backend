@@ -13,4 +13,7 @@ router.use("/product", productRoutes)
 const uploadRoutes = require("./uploader.routes")
 router.use("/uploader", uploadRoutes)
 
+const transactionRoutes = require("./transactions.routes")
+router.use("/transaction", transactionRoutes)
+
 module.exports = router;

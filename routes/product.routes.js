@@ -1,6 +1,7 @@
 const router = require("express").Router()
 const { findByIdAndUpdate } = require("../models/Product.model")
 const Product = require("../models/Product.model")
+const Transaction = require("../models/Transaction.model")
 
 
 router.post("/create", async (req, res, next)=>{
@@ -137,9 +138,11 @@ router.post("/create-payment-intent", async (req, res) => {
         enabled: true,
       },
     });
-  
+
+    await Transaction.create({payment_intent: paymentIntent.id, client_secret: paymentIntent.client_secret, status: paymentIntent.status, amount: paymentIntent.amount})
+
     res.send({
-      clientSecret: paymentIntent.client_secret,
+      clientSecret: paymentIntent.client_secret
     });
 });
 
