@@ -16,4 +16,23 @@ router.post("/create", async (req, res, next)=>{
 
 })
 
+router.post("/changeState/:state", async (req, res, next)=>{
+
+    const {state} = req.params
+    const {id} = req.body
+
+    if(!state || !id){
+        res.status(400).json({errorMessage: "Faltan datos"})
+    }
+
+    try{
+
+        await Transaction.findByIdAndUpdate(id, {state: state})
+        res.json({succesMessage: "Estado cambiado"})
+    }
+    catch(err){
+        console.log(err)
+    }
+})
+
 module.exports = router
