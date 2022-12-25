@@ -17,6 +17,16 @@ const transactionSchema = new Schema(
         amount: {
             type: Number,
             required: true
+        },
+        products: {
+            type: [Object],
+            required: true
+        },
+        state: {
+            type: String,
+            required: true,
+            enum: ["Pendiente", "Realizado", "Enviado"],
+            default: "Pendiente"
         }
     }
 )
