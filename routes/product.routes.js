@@ -7,7 +7,6 @@ const Transaction = require("../models/Transaction.model")
 router.post("/create", async (req, res, next)=>{
 
     const {name, price, description, category, image} = req.body
-    console.log(image, "image")
 
     if(!name || !price || !description || !category || !image){
         res.status(400).json({errorMessage: "Debes rellenar todos los campos"})
