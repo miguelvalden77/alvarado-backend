@@ -80,7 +80,7 @@ router.post("/:id/update", async (req, res, next)=>{
     const {id} = req.params
     const {name, description, price, image} = req.body
 
-    if(!name || !description || !price || !image){
+    if(!name || !description || !price){
         res.json({errorMessage: "Deben rellenarse todos los campos"})
         return
     }
