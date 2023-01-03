@@ -114,7 +114,9 @@ const stripe = require("stripe")('sk_test_51MGUQ8GKc0rrkaCnXzab3LpEQNagPoHznPIXG
 
 
 router.post("/create-payment-intent", async (req, res) => {
-    const { items } = req.body;
+    const { items, info } = req.body;
+
+    console.log(info, "info")
 
     const products = items.map(async (e) =>{
         const product = await Product.findById(e.product._id)
@@ -138,7 +140,7 @@ router.post("/create-payment-intent", async (req, res) => {
       },
     });
 
-    await Transaction.create({payment_intent: paymentIntent.id, client_secret: paymentIntent.client_secret, status: paymentIntent.status, amount: paymentIntent.amount, products: items})
+    await Transaction.create({payment_intent: paymentIntent.id, client_secret: paymentIntent.client_secret, status: paymentIntent.status, amount: paymentIntent.amount, products: items, customer: info})
 
     res.send({
       clientSecret: paymentIntent.client_secret

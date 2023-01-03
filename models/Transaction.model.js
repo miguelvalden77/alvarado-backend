@@ -27,7 +27,34 @@ const transactionSchema = new Schema(
             required: true,
             enum: ["Pendiente", "Realizado", "Enviado"],
             default: "Pendiente"
+        },
+        customer: {
+            type: Object,
+            required: true,
+            nombre: {
+                type: String,
+                required: true
+            },
+            apellido: {
+                type: String,
+                required: true
+            },
+            direccion: {
+                type: String,
+                required: true
+            },
+            codigo: {
+                type: Number,
+                required: true
+            },
+            correo: {
+                type: String,
+                required: true
+            }
         }
+    },
+    {
+        timestamps: true
     }
 )
 
