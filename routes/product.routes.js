@@ -140,7 +140,7 @@ router.post("/create-payment-intent", async (req, res) => {
       },
     });
 
-    await Transaction.create({payment_intent: paymentIntent.id, client_secret: paymentIntent.client_secret, status: paymentIntent.status, amount: paymentIntent.amount, products: items, customer: info})
+    const transaccion = await Transaction.create({payment_intent: paymentIntent.id, client_secret: paymentIntent.client_secret, status: paymentIntent.status, amount: paymentIntent.amount, products: items, customer: info})
 
     res.send({
       clientSecret: paymentIntent.client_secret
