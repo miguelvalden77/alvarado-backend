@@ -19,7 +19,7 @@ router.post("/login", async (req, res, next)=>{
     // tkn("1234abcdABCD")
 
     if(!username || !password){
-        res.status(400).json({errorMessage: "Deben rellenarse todos los campos"})
+        res.status(400).json({errorMessage: "Rellena los campos"})
         return
     }
 
@@ -28,7 +28,7 @@ router.post("/login", async (req, res, next)=>{
         const foundUser = await User.findOne({username})
 
         if(foundUser == null){
-            res.status(400).json({errorMessage: "El usuario no es correcto"})
+            res.status(400).json({errorMessage: "usuario incorrecto"})
             return
         }
 
