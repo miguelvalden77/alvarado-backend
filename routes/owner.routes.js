@@ -1,9 +1,10 @@
+const isAuth = require("../middlewares/isAuth")
 const Transaction = require("../models/Transaction.model")
 
 const router = require("express").Router()
 
 
-router.post("/allTransactions", async (req, res, next)=>{
+router.post("/allTransactions", isAuth, async (req, res, next)=>{
 
     const {state} = req.body
 

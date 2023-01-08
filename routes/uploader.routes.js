@@ -1,7 +1,8 @@
 const router = require("express").Router()
+const isAuth = require("../middlewares/isAuth")
 const uploader = require("../middlewares/uploader")
 
-router.post("/", uploader.single("image"), (req, res, next)=>{
+router.post("/", isAuth, uploader.single("image"), (req, res, next)=>{
 
     if(req.file === undefined){
         res.json({errorMessage: "No se puede subir la imagen"})

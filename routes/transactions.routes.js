@@ -1,6 +1,7 @@
 const Transaction = require("../models/Transaction.model")
 const router = require("express").Router()
 const nodemailer = require("nodemailer");
+const isAuth = require("../middlewares/isAuth");
 
 let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -19,12 +20,18 @@ router.post("/create", async (req, res, next)=>{
     try{
         const transaction = await Transaction.findOneAndUpdate({payment_intent: id, client_secret: client_secret}, {status: status})
     
-            await transporter.sendMail({
-            from: `"Fred Foo 👻" <${process.env.CORREO}>`, // sender address
-            to: `${transaction.customer.correo}, ${process.env.CORREO}`, // list of receivers
-            subject: "Hacienda", // Subject line
-            html: `Su compra ha sido realizado con éxito por un importe de ${transaction.amount / 100}`, // html body
-          });
+            if(transaction.status == "succeeded"){
+                console.log("hola")
+                await transporter.sendMail({
+                from: `"Fred Foo 👻" <${process.env.CORREO}>`, // sender address
+                to: `${transaction.customer.correo}, ${process.env.CORREO}`, // list of receivers
+                subject: "Hacienda", // Subject line
+                html: `Su compra ha sido realizado con éxito por un importe de ${transaction.amount / 100}`, // html body
+                });
+                
+                res.json({succesMessage: "hola"})
+                return
+            }
 
     }
     catch(err){
@@ -33,22 +40,21 @@ router.post("/create", async (req, res, next)=>{
 
 })
 
-router.post("/changeState/:estado", async (req, res, next)=>{
+router.post("/changeState/:estado", isAuth, async (req, res, next)=>{
 
     const {estado} = req.params
     const {id} = req.body
 
     if(!estado || !id){
         res.status(400).json({errorMessage: "Faltan datos"})
+        console.log("Faltan datos")
     }
 
     try{
 
         const transaction = await Transaction.findByIdAndUpdate(id, {state: estado})
-        console.log(transaction.state, "stateee, trans")
-        console.log(estado, "stateee params")
+
         if(estado == "Enviado"){
-            console.log("Estoy dentro")
             await transporter.sendMail({
                 from: `"Fred Foo 👻" <${process.env.CORREO}>`, // sender address
                 to: transaction.customer.correo, // list of receivers
@@ -56,10 +62,15 @@ router.post("/changeState/:estado", async (req, res, next)=>{
                 html: `su pedido ha sido enviado, le llegará en un plao de 2 a 4 días laborables`, // html body
               });
         res.json({succesMessage: "Estado cambiado"})
-        return
         }
 
-        res.json({succesMessage: "Estado cambiado"})
+        const transactions = await Transaction.find({status: "requires_payment_method"})
+
+        if(transactions.length > 0){
+            transactions.forEach(async (e)=>{
+                await Transaction.findByIdAndDelete(e._id)
+            })
+        }
     }
     catch(err){
         console.log(err)

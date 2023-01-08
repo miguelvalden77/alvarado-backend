@@ -1,10 +1,11 @@
 const router = require("express").Router()
+const isAuth = require("../middlewares/isAuth")
 const { findByIdAndUpdate } = require("../models/Product.model")
 const Product = require("../models/Product.model")
 const Transaction = require("../models/Transaction.model")
 
 
-router.post("/create", async (req, res, next)=>{
+router.post("/create", isAuth, async (req, res, next)=>{
 
     const {name, price, description, category, image} = req.body
 
@@ -75,7 +76,7 @@ router.get("/:id/stock", async (req, res, next)=>{
 
 })
 
-router.post("/:id/update", async (req, res, next)=>{
+router.post("/:id/update", isAuth, async (req, res, next)=>{
 
     const {id} = req.params
     const {name, description, price, image} = req.body
@@ -96,7 +97,7 @@ router.post("/:id/update", async (req, res, next)=>{
 
 })
 
-router.delete("/:id/delete", async (req, res, next)=>{
+router.delete("/:id/delete", isAuth, async (req, res, next)=>{
 
     const {id} = req.params
 
@@ -140,7 +141,7 @@ router.post("/create-payment-intent", async (req, res) => {
       },
     });
 
-    const transaccion = await Transaction.create({payment_intent: paymentIntent.id, client_secret: paymentIntent.client_secret, status: paymentIntent.status, amount: paymentIntent.amount, products: items, customer: info})
+    await Transaction.create({payment_intent: paymentIntent.id, client_secret: paymentIntent.client_secret, status: paymentIntent.status, amount: paymentIntent.amount, products: items, customer: info})
 
     res.send({
       clientSecret: paymentIntent.client_secret
