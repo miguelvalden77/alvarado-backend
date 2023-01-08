@@ -117,8 +117,6 @@ const stripe = require("stripe")('sk_test_51MGUQ8GKc0rrkaCnXzab3LpEQNagPoHznPIXG
 router.post("/create-payment-intent", async (req, res) => {
     const { items, info } = req.body;
 
-    console.log(info, "info")
-
     const products = items.map(async (e) =>{
         const product = await Product.findById(e.product._id)
         return {product: product, cantidad: e.cantidad}

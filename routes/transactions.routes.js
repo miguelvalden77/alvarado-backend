@@ -21,7 +21,6 @@ router.post("/create", async (req, res, next)=>{
         const transaction = await Transaction.findOneAndUpdate({payment_intent: id, client_secret: client_secret}, {status: status})
     
             if(transaction.status == "succeeded"){
-                console.log("hola")
                 await transporter.sendMail({
                 from: `"Fred Foo 👻" <${process.env.CORREO}>`, // sender address
                 to: `${transaction.customer.correo}, ${process.env.CORREO}`, // list of receivers
@@ -47,7 +46,7 @@ router.post("/changeState/:estado", isAuth, async (req, res, next)=>{
 
     if(!estado || !id){
         res.status(400).json({errorMessage: "Faltan datos"})
-        console.log("Faltan datos")
+        return
     }
 
     try{

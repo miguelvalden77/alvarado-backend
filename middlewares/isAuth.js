@@ -20,7 +20,6 @@ const isAuth = expressjwt({
             return null
         }
 
-        console.log("Token enviado")
         return token
     }
 })
