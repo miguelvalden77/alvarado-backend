@@ -21,12 +21,20 @@ const productSchema = new Schema(
         },
         category: {
             type: String,
-            enum: ["jam&pa", "que", "vac", "emb", "vin", "car", "bac", "lot"],
+            enum: ["jamones-paletas", "quesos", "envasados", "embutidos", "vinos", "carnes", "bacalaos", "lotes"],
             required: true
         },
         image: {
             type: String,
             required: true
+        },
+        peso: {
+            type: Number,
+            required: true
+        },
+        isCorte: {
+            type: Boolean,
+            default: false
         }
     },
     {
