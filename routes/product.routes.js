@@ -119,14 +119,20 @@ router.post("/create-payment-intent", async (req, res) => {
 
     const products = items.map(async (e) =>{
         const product = await Product.findById(e.product._id)
-        return {product: product, cantidad: e.cantidad}
+        return {product: product, cantidad: e.cantidad, corte: e.corte}
     })
 
     const results = await Promise.all(products)
 
     const totalAmount = results.reduce((acc, item)=>{
 
-        return acc + item.product.price * item.cantidad
+        let corte = item.corte * item.product.corte
+
+        if(!corte){
+            corte = 0
+        }
+
+        return acc + item.product.price * item.cantidad + corte
 
     }, 0)
   

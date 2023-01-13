@@ -50,6 +50,10 @@ const transactionSchema = new Schema(
             correo: {
                 type: String,
                 required: true
+            },
+            numero: {
+                type: Number,
+                required: true
             }
         }
     },

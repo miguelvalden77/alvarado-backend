@@ -24,7 +24,7 @@ router.post("/create", async (req, res, next)=>{
     
             if(transaction.status == "succeeded"){
                 const archivo = `<h1>Factura exitosa</h1>
-                <p>Esta factura esta guay</p>`
+                <p>Dinero gastado ${transaction.amount}</p>`
 
                 pdf.create(archivo).toFile("./factura.pdf", (err, res)=>{
                     if(err){
