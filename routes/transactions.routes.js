@@ -2,7 +2,8 @@ const Transaction = require("../models/Transaction.model")
 const router = require("express").Router()
 const nodemailer = require("nodemailer");
 const isAuth = require("../middlewares/isAuth");
-const pdf = require("html-pdf")
+const pdf = require("html-pdf");
+const { getFecha, createTable } = require("../functions/date");
 
 
 let transporter = nodemailer.createTransport({
@@ -21,31 +22,72 @@ router.post("/create", async (req, res, next)=>{
 
     try{
         const transaction = await Transaction.findOneAndUpdate({payment_intent: id, client_secret: client_secret}, {status: status})
-    
-            if(transaction.status == "succeeded"){
-                const archivo = `<h1>Factura exitosa</h1>
-                <p>Dinero gastado ${transaction.amount}</p>`
 
-                pdf.create(archivo).toFile("./factura.pdf", (err, res)=>{
-                    if(err){
-                        console.log(err)
-                    }
-                    if(res){
-                        console.log(res)
-                    }
+        const prods = createTable(transaction.products)
+        const mes = transaction.createdAt.getMonth()
+        const dia = transaction.createdAt.getDate()
+        const año = transaction.createdAt.getFullYear()
+        console.log(mes, dia, año)
+
+            if(transaction.status == "succeeded"){
+                const archivo = 
+                `
+                <html>
+                <head>
+                    <style>
+                        h1{
+                            text-align: center;
+                        }
+                    </style>
+                </head>
+                <body>
+                <h1>Factura</h1>
+                <p>${dia}/${mes + 1}/${año}</p>
+                <p>A nombre de: ${transaction.customer.nombre} ${transaction.customer.apellido}</p>
+                <table>
+                    <h2>Productos</h2>
+                    <thead>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Corte</th>
+                        <th>Total</th>
+                    </thead>
+                    <tbody>
+                    ${prods}
+                    </tbody>
+                </table>
+                <h2>Monto total ${transaction.amount / 100} euros</h2>
+                </body>
+                </html>
+                `
+
+                const pdfPromise = new Promise((resolve, rej)=>{
+
+                    resolve(
+                        pdf.create(archivo).toFile("./factura.pdf", (err, res)=>{
+                        if(err){
+                            console.log(err)
+                        }
+                        if(res){
+                            console.log(res)
+                        }
+                    })
+                    )
                 })
 
-                await transporter.sendMail({
-                from: `"Fred Foo 👻" <${process.env.CORREO}>`, // sender address
-                to: `${transaction.customer.correo}, ${process.env.CORREO}`, // list of receivers
-                subject: "Hacienda", // Subject line
-                html: `Su compra ha sido realizado con éxito por un importe de ${transaction.amount / 100}`, // html body
-                attachments: [{
-                    filename: "factura.pdf",
-                    path: "./factura.pdf"
-                }]
-                });
+                await pdfPromise
 
+                await transporter.sendMail({
+                    from: `"Fred Foo 👻" <${process.env.CORREO}>`, // sender address
+                    to: `${transaction.customer.correo}, ${process.env.CORREO}`, // list of receivers
+                    subject: "Hacienda", // Subject line
+                    html: `Su compra ha sido realizado con éxito por un importe de ${transaction.amount / 100}`, // html body
+                    attachments: [{
+                        filename: "factura.pdf",
+                        path: "./factura.pdf"
+                    }]
+                    });
+           
                 res.json({succesMessage: "hola"})
                 return
             }

@@ -1,6 +1,5 @@
 const router = require("express").Router()
 const isAuth = require("../middlewares/isAuth")
-const { findByIdAndUpdate } = require("../models/Product.model")
 const Product = require("../models/Product.model")
 const Transaction = require("../models/Transaction.model")
 
