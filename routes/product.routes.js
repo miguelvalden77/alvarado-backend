@@ -6,7 +6,7 @@ const Transaction = require("../models/Transaction.model")
 
 router.post("/create", isAuth, async (req, res, next)=>{
 
-    const {name, price, description, category, image} = req.body
+    const {name, price, description, category, image, peso} = req.body
 
     if(!name || !price || !description || !category || !image){
         res.status(400).json({errorMessage: "Debes rellenar todos los campos"})
@@ -15,7 +15,7 @@ router.post("/create", isAuth, async (req, res, next)=>{
 
     try{
 
-        await Product.create({name, price, description, category, image})
+        await Product.create({name, price, description, category, image, peso})
         
         res.json({succesMessage: "Producto creado"})
     }
@@ -78,7 +78,7 @@ router.get("/:id/stock", async (req, res, next)=>{
 router.post("/:id/update", isAuth, async (req, res, next)=>{
 
     const {id} = req.params
-    const {name, description, price, image} = req.body
+    const {name, description, price, image, peso} = req.body
 
     if(!name || !description || !price){
         res.json({errorMessage: "Deben rellenarse todos los campos"})
@@ -86,7 +86,7 @@ router.post("/:id/update", isAuth, async (req, res, next)=>{
     }
 
     try{
-        await Product.findByIdAndUpdate(id, {name, description, price, image})
+        await Product.findByIdAndUpdate(id, {name, description, price, image, peso})
 
         res.json({succesMessage: "Producto actualizado"})
     }

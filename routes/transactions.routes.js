@@ -136,4 +136,18 @@ router.post("/changeState/:estado", isAuth, async (req, res, next)=>{
     }
 })
 
+router.get("/:id/transaction", isAuth, async (req, res, next)=>{
+
+    const {id} = req.params
+
+    try{
+        const transaction = await Transaction.findById(id)
+        res.json(transaction)
+    }
+    catch(err){
+        console.log(err)
+    }
+
+})
+
 module.exports = router
