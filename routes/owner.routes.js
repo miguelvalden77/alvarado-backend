@@ -30,4 +30,30 @@ router.post("/allTransactions", isAuth, async (req, res, next) => {
 
 })
 
+router.get("/salesByMonth/:date", isAuth, async (req, res, next) => {
+
+    const { date } = req.params
+    const [year, month] = date.split("-")
+    const jsDate = new Date(`${year}-${month}-01`)
+    const jsDateLimit = new Date(`${Number(month) == 12 ? Number(year) + 1 : year}-${Number(month) == 12 ? 1 : Number(month) + 1}-01`)
+    const isoDate = jsDate.toISOString()
+    const isoDateLimit = jsDateLimit.toISOString()
+
+    try {
+
+        const transacciones = await Transaction.find({ createdAt: { $gte: isoDate, $lt: isoDateLimit } }).select(["amount", "createdAt"])
+        console.log(transacciones)
+        if (!transacciones) {
+            res.json({ message: "No hay resultados para esa búsqueda" })
+            return
+        }
+
+        res.json(transacciones)
+    }
+    catch (err) {
+        next(err)
+    }
+
+})
+
 module.exports = router

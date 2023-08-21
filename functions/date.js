@@ -1,45 +1,50 @@
 
-const mes = (num) =>{
-    switch (num){
+const mes = (num) => {
+    switch (num) {
         case 1: return "Enero"
-        break
+            break
         case 2: return "Febrero"
-        break
+            break
         case 3: return "Marzo"
-        break
+            break
         case 4: return "Abril"
-        break
+            break
         case 5: return "Mayo"
-        break
+            break
         case 6: return "Junio"
-        break
+            break
         case 7: return "Julio"
-        break
+            break
         case 8: return "Agosto"
-        break
+            break
         case 9: return "Septiembre"
-        break
+            break
         case 10: return "Octubre"
-        break
+            break
         case 11: return "Noviembre"
-        break
+            break
         case 12: return "Dicembre"
-        break
+            break
     }
 }
 
-const getFecha = (fecha)=>{
+const getFecha = (fecha) => {
 
     const splitFecha = fecha.split("-")
-  
+
     return `${splitFecha[2].slice(0, 2)} de ${mes(splitFecha[1])} de ${splitFecha[0]}`
 }
 
-const createTable = (arr)=>{
+// const getResultMonth = (month) => {
+
+//     if(Number(month) == 12)
+// }
+
+const createTable = (arr) => {
 
     let str = ""
 
-    arr.forEach(obj=>{
+    arr.forEach(obj => {
         let total = obj.cantidad * obj.product.price + (obj.product.corte * obj.corte)
         let html = `
         <tr>
@@ -55,4 +60,4 @@ const createTable = (arr)=>{
     return str
 }
 
-module.exports = {getFecha, mes, createTable}
+module.exports = { getFecha, mes, createTable }
