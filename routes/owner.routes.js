@@ -30,6 +30,25 @@ router.post("/allTransactions", isAuth, async (req, res, next) => {
 
 })
 
+router.post("/transactions/client", async (req, res, next) => {
+
+    const { client } = req.body
+
+    if (!client) {
+        res.status(400).json({ errorMessage: "No hay nombre de ningún cliente" })
+        return
+    }
+
+    try {
+
+        const transactions = await Transaction.find({ "customer.nombre": { $regex: `.*${client}.*`, $options: "i" } })
+        res.json({ transactions, total: transactions.length })
+
+    } catch (err) {
+        next(err)
+    }
+})
+
 router.get("/salesByMonth/:date", isAuth, async (req, res, next) => {
 
     const { date } = req.params
