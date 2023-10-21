@@ -32,7 +32,8 @@ router.post("/allTransactions", isAuth, async (req, res, next) => {
 
 router.post("/transactions/client", async (req, res, next) => {
 
-    const { client } = req.body
+    const { client, ventas, page } = req.body
+    const pagina = ventas * page
 
     if (!client) {
         res.status(400).json({ errorMessage: "No hay nombre de ningún cliente" })
@@ -41,7 +42,7 @@ router.post("/transactions/client", async (req, res, next) => {
 
     try {
 
-        const transactions = await Transaction.find({ "customer.nombre": { $regex: `.*${client}.*`, $options: "i" } })
+        const transactions = await Transaction.find({ "customer.nombre": { $regex: `.*${client}.*`, $options: "i" } }).skip(pagina - ventas).limit(ventas)
         res.json({ transactions, total: transactions.length })
 
     } catch (err) {
